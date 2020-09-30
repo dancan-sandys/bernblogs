@@ -33,16 +33,16 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        mail_message("Welcome to blog","email/welcome_user",user.email,user=user)
+        mail_message("Welcome to blogs","email/welcome_user",user.email,user=user)
 
         return redirect(url_for('auth.login'))
-        title = "New Account"
+        title = "New Account Created"
     return render_template('auth/register.html',registration_form = form)  
 
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('You have been successfully logged out')
+    flash('You have been logged out sucessfully')
     return redirect(url_for("main.index"))
 
