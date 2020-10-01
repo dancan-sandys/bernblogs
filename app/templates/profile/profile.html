@@ -1,45 +1,46 @@
-{% extends 'base.html'%}
-{% import 'bootstrap/wtf.html' as wtf %}
-{% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-4 black">
-        <div class="content-section mt-4">
-            {% for message in get_flashed_messages() %}
-            <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
-            </div>
-            {% endfor %}
-            {% if errors %}
-              {% for error in errors %}
-                <span class="text-danger">{{ error }}</span></br>
-              {% endfor %}
-            {%endif%}
-    <div class="card testimonial-card">
-    <div class="card-up indigo lighten-1"></div>
-    <div class="avatar mx-auto white">
-      <img src="{{profile_pic_path}}" class="rounded-circle account-img mt-2" alt="woman avatar">
-    </div>
-    <div class="card-body">
-      <h4 class="card-title text-center">{{current_user.username|title}}</h4>
-      <hr>
-      <p> {{current_user.email}} </p>
-      <p><i class="fas fa-quote-left"></i> {{current_user.bio}} <i class="fas fa-quote-right"></i> </p>
-      <button class="btn btn-sm btn-info" id="showform"> Update Profile</button>
-    </div>
-      
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-      <div class="container mt-4" >
-        <div id="profileupdate">
-          <h2>Update Your Profile Here</h2>
-            {{wtf.quick_form(form)}}
-        </div>
-      </div>
-  </div>
+{%extends 'base.html'%}
+
+
+
+{%block content%}
+{%block styles%}
+{{super()}}
+
+<link rel="stylesheet" href="{{url_for('static', filename = 'profile.css')}}">
+{%endblock%}
+<div class="heading">
+<hr>
+<h1 class="pagetitle">Profile</h1>
+<hr>
 </div>
-{% endblock %}
+<div class="row">
+
+
+    <div class="col-md-6">
+        {%if current_user.profile_pic%}
+        <img src="{{url_for('static', filename = user.profile_pic)}}" alt="">
+        {%else%}
+
+        <img src="{{url_for('static', filename = 'photos/pexels-karolina-grabowska-4386467.jpg')}}" alt="">
+        {%endif%}
+
+
+        <form action="{{url_for('profile.updateprofile', uname = user.username)}}" , method="post" ,
+            enctype="multipart/form-data">
+            <h5>Update profile</h5>
+            <input type="file" name='photo' required>
+            <input type="submit">
+        </form>
+    </div>
+    <div class="col-md-5 bio card">
+        <h2>{{user.username}}</h2>
+        <h4>Bio</h4>
+        {%if user.bio%}
+        <p>{{user.bio}}</p>
+        {%else%}
+        <p>I am {{user.username}} and I don't have a Bio yet! </p>
+        {%endif%}
+        <p><a class="btn btn-success" href="{{url_for('profile.updatebio', uname = user.username)}}">Update Bio</a></p>
+    </div>
+</div>
+{%endblock%}
